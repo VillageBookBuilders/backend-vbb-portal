@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from django_filters import rest_framework as filters
+from django.db.models import Q
 
 from vbb_backend.program.api.serializers.slot import (
     MinimalSlotSerializer,
@@ -71,12 +72,15 @@ class ReadOnlySlotViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             days=int(start_day_of_week), hours=int(start_hour), minutes=int(start_minute)
         )
         
-        end_day_of_week = self.request.query_params.get("end_day_of_the_week") or 7
+        end_day_of_week = self.request.query_params.get("end_day_of_week") or 7
         end_hour = self.request.query_params.get("end_hour") or 23
         end_minute = self.request.query_params.get("end_minute") or 59
-        for_schedule_end = Slot.DEAFULT_INIT_DATE + datetime.timedelta(days=int(end_day_of_week), hours=int(end_hour), minutes=int(end_minute))
+        for_schedule_end = Slot.DEAFULT_INIT_DATE + datetime.timedelta(
+            days=int(end_day_of_week), hours=int(end_hour), minutes=int(end_minute)
+        )
         
-        return queryset.filter(schedule_start__gte=for_schedule_start)
+        return queryset.filter(Q(schedule_start__gte=for_schedule_start), Q(schedule_end__lte=for_schedule_end))
+        # return queryset.filter(schedule_end__lte=for_schedule_end)
         # slot = self.get_slots(for_schedule_start, for_schedule_end)
         # slot_set = slot
 
