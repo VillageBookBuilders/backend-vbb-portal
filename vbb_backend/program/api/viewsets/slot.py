@@ -63,14 +63,14 @@ class ReadOnlySlotViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         start_day_of_week = self.request.query_params.get("start_day_of_week") or 0
         start_hour = self.request.query_params.get("start_hour") or 0
         start_minute = self.request.query_params.get("start_minute") or 0
-        for_schedule_start = Slot.DEAFULT_INIT_DATE + datetime.timedelta(
+        schedule_start = Slot.DEAFULT_INIT_DATE + datetime.timedelta(
             days=int(start_day_of_week), hours=int(start_hour), minutes=int(start_minute)
         )
         
         end_day_of_week = self.request.query_params.get("end_day_of_week") or 6
         end_hour = self.request.query_params.get("end_hour") or 23
         end_minute = self.request.query_params.get("end_minute") or 59
-        for_schedule_end = Slot.DEAFULT_INIT_DATE + datetime.timedelta(
+        schedule_end = Slot.DEAFULT_INIT_DATE + datetime.timedelta(
             days=int(end_day_of_week), hours=int(end_hour), minutes=int(end_minute)
         )
 
@@ -79,12 +79,10 @@ class ReadOnlySlotViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         language = self.request.query_params.get("language")
         is_mentor_assigned = self.request.query_params.get("is_mentor_assigned")
         is_student_assigned = self.request.query_params.get("is_student_assigned")
-        
-        # return queryset.filter(Q(schedule_start__gte=for_schedule_start), Q(schedule_end__lte=for_schedule_end))
-        # matching_slots = F({'schedule_start': for_schedule_start, 'schedule_end': for_schedule_end}, queryset=queryset)
+
         matching_slots = F({
-            'schedule_start': for_schedule_start,
-            'schedule_end': for_schedule_end,
+            "schedule_start": schedule_start,
+            "schedule_end": schedule_end,
             "computer_id": computer_id,
             "max_students": max_students,
             "is_mentor_assigned": is_mentor_assigned,
