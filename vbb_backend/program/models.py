@@ -102,26 +102,6 @@ class Program(BaseUUIDModel):
 
     ACCESS_CONTROL = {"program_director": [UserTypeEnum.PROGRAM_MANAGER.value]}
 
-    @staticmethod
-    def has_create_permission(request):
-        return request.user.is_superuser
-
-    @staticmethod
-    def has_write_permission(request):
-        return True
-
-    @staticmethod
-    def has_read_permission(request):
-        return True  # User Queryset Filtering Here
-
-    def has_object_write_permission(self, request):
-        return request.user.is_superuser or request.user == self.program_director
-
-    def has_object_update_permission(self, request):
-        return self.has_object_write_permission(request)
-
-    def has_object_read_permission(self, request):
-        return self.has_object_write_permission(request)
 
 
 class HeadmastersProgramAssociation(BaseUUIDModel):
@@ -216,28 +196,6 @@ class School(BaseUUIDModel):  # LATER keep track of student attendance, and grad
     # has classrooms ("has" means these things have foreign keys back to school)
     # has teachers and students ("has" means these things have foreign keys back to school)
 
-    @staticmethod
-    def has_create_permission(request):
-        program = Program.objects.get(external_id=request.parser_context["kwargs"]["program_external_id"])
-        return request.user.is_superuser or request.user == program.program_director
-
-    @staticmethod
-    def has_write_permission(request):
-        return True
-
-    @staticmethod
-    def has_read_permission(request):
-        return True  # User Queryset Filtering Here
-
-    def has_object_write_permission(self, request):
-        return request.user.is_superuser or request.user == self.program.program_director
-
-    def has_object_update_permission(self, request):
-        return self.has_object_write_permission(request)
-
-    def has_object_read_permission(self, request):
-        return self.has_object_write_permission(request)
-
 
 class Classroom(BaseUUIDModel):  # DEPRECATED
     """
@@ -255,28 +213,6 @@ class Classroom(BaseUUIDModel):  # DEPRECATED
 
     name = models.CharField(max_length=40, null=True, blank=True)
     school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True)
-
-    @staticmethod
-    def has_create_permission(request):
-        school = School.objects.get(external_id=request.parser_context["kwargs"]["school_external_id"])
-        return request.user.is_superuser or request.user == school.program.program_director
-
-    @staticmethod
-    def has_write_permission(request):
-        return True
-
-    @staticmethod
-    def has_read_permission(request):
-        return True  # User Queryset Filtering Here
-
-    def has_object_write_permission(self, request):
-        return request.user.is_superuser or request.user == self.school.program.program_director
-
-    def has_object_update_permission(self, request):
-        return self.has_object_write_permission(request)
-
-    def has_object_read_permission(self, request):
-        return self.has_object_write_permission(request)
 
 
 class Library(BaseUUIDModel):
@@ -363,27 +299,6 @@ class Computer(BaseUUIDModel):
     def __str__(self):
         return f"{str(self.program)} {str(self.computer_number)} + ({self.computer_email})"
 
-    @staticmethod
-    def has_create_permission(request):
-        program = Program.objects.get(external_id=request.parser_context["kwargs"]["program_external_id"])
-        return request.user.is_superuser or request.user == program.program_director
-
-    @staticmethod
-    def has_write_permission(request):
-        return True
-
-    @staticmethod
-    def has_read_permission(request):
-        return True  # User Queryset Filtering Here
-
-    def has_object_write_permission(self, request):
-        return request.user.is_superuser or request.user == self.program.program_director
-
-    def has_object_update_permission(self, request):
-        return self.has_object_write_permission(request)
-
-    def has_object_read_permission(self, request):
-        return self.has_object_write_permission(request)
 
 
 class Slot(BaseUUIDModel):
@@ -456,28 +371,6 @@ class Slot(BaseUUIDModel):
     def end_minute(self):
         return self.schedule_end.minute
 
-    @staticmethod
-    def has_create_permission(request):
-        computer = Computer.objects.get(external_id=request.parser_context["kwargs"]["computer_external_id"])
-        return request.user.is_superuser or request.user == computer.program.program_director
-
-    @staticmethod
-    def has_write_permission(request):
-        return True
-
-    @staticmethod
-    def has_read_permission(request):
-        return True  # User Queryset Filtering Here
-
-    def has_object_write_permission(self, request):
-        return request.user.is_superuser or request.user == self.computer.program.program_director
-
-    def has_object_update_permission(self, request):
-        return self.has_object_write_permission(request)
-
-    def has_object_read_permission(self, request):
-        return self.has_object_write_permission(request)
-
 
 class StudentSlotAssociation(BaseUUIDModel):
     """
@@ -492,28 +385,6 @@ class StudentSlotAssociation(BaseUUIDModel):
     )
     slot = models.ForeignKey(Slot, on_delete=models.SET_NULL, null=True, related_name="slot_student")
     priority = models.IntegerField(default=0)  # 0 is the highest priority
-
-    @staticmethod
-    def has_create_permission(request):
-        program = Program.objects.get(external_id=request.parser_context["kwargs"]["program_external_id"])
-        return request.user.is_superuser or request.user == program.program_director
-
-    @staticmethod
-    def has_write_permission(request):
-        return True
-
-    @staticmethod
-    def has_read_permission(request):
-        return True  # User Queryset Filtering Here
-
-    def has_object_write_permission(self, request):
-        return request.user.is_superuser or request.user == self.slot.computer.program.program_director
-
-    def has_object_update_permission(self, request):
-        return self.has_object_write_permission(request)
-
-    def has_object_read_permission(self, request):
-        return self.has_object_write_permission(request)
 
 
 class MentorSlotAssociation(BaseUUIDModel):
