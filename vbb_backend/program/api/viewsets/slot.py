@@ -53,3 +53,10 @@ class ReadOnlySlotViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = MinimalSlotSerializer
     lookup_field = "external_id"
+  
+    @action(methodes='GET', detail=False)
+    def get_unique_programs(self, request):
+        self.filter_queryset(self.get_queryset()).distinct("computer__program") 
+        programs = Slot.objects.values("computer__program")
+        data = MinimalProgramSerializer(programs, many=true)
+        return Response(data.data)
