@@ -1,5 +1,4 @@
 from rest_framework.exceptions import PermissionDenied
-from dry_rest_permissions.generics import DRYPermissions
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet

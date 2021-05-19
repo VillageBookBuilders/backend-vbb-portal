@@ -186,28 +186,6 @@ class Student(BaseUUIDModel):
 
     # add models to this.
 
-    @staticmethod
-    def has_create_permission(request):
-        school = School.objects.get(external_id=request.parser_context["kwargs"]["school_external_id"])
-        return request.user.is_superuser or request.user == school.program.program_director
-
-    @staticmethod
-    def has_write_permission(request):
-        return True
-
-    @staticmethod
-    def has_read_permission(request):
-        return True  # User Queryset Filtering Here
-
-    def has_object_write_permission(self, request):
-        return request.user.is_superuser or request.user == self.school.program.program_director
-
-    def has_object_update_permission(self, request):
-        return self.has_object_write_permission(request)
-
-    def has_object_read_permission(self, request):
-        return self.has_object_write_permission(request)
-
     # Further Student Information Here
 
 
