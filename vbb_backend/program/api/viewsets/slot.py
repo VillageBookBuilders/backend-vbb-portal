@@ -10,7 +10,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from django_filters import rest_framework as filters
-from django.db.models import Q
 
 from vbb_backend.program.api.serializers.slot import (
     MinimalSlotSerializer,
@@ -89,6 +88,7 @@ class ReadOnlySlotViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             "is_student_assigned": is_student_assigned,
             "language": language,
             }, queryset=queryset)
+
         return matching_slots.qs
 
 class F(filters.FilterSet):
