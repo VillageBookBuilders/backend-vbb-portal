@@ -1,5 +1,4 @@
 from django.db.models import query
-from dry_rest_permissions.generics import DRYPermissions
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet

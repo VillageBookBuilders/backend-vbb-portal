@@ -1,7 +1,6 @@
 from re import IGNORECASE
 import django
 from django.db.models.fields import DateField
-from dry_rest_permissions.generics import DRYPermissions
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import DestroyAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
