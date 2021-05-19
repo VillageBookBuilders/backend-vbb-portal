@@ -1,4 +1,3 @@
-from dry_rest_permissions.generics import DRYPermissions
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
