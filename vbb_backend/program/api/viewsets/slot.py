@@ -1,4 +1,4 @@
-import datetime, logging
+import datetime
 from drf_yasg.utils import swagger_auto_schema
 from dry_rest_permissions.generics import DRYPermissions
 from rest_framework import status
@@ -17,8 +17,6 @@ from vbb_backend.program.api.serializers.slot import (
 )
 from vbb_backend.program.models import Computer, Program, Slot
 from vbb_backend.users.models import UserTypeEnum
-
-logger = logging.getLogger('django.db.backends')
 
 
 class SlotViewSet(ModelViewSet):
