@@ -13,7 +13,7 @@ from vbb_backend.users.models import UserTypeEnum
 
 class MentorSlotViewSet(ModelViewSet):
     queryset = MentorSlotAssociation.objects.all()
-    permission_classes = [IsAuthenticated, DRYPermissions]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = MentorSlotSerializer
     lookup_field = "external_id"
 
@@ -41,7 +41,7 @@ class MentorSlotViewSet(ModelViewSet):
 
 class MentorBookingViewSet(ModelViewSet):
     queryset = MentorSlotAssociation.objects.all()
-    permission_classes = [IsAuthenticated, DRYPermissions]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = MentorSlotBookingSerializer
     lookup_field = "external_id"
 

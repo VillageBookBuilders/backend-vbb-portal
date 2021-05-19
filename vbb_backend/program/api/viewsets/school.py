@@ -10,7 +10,7 @@ from vbb_backend.users.models import UserTypeEnum
 
 class SchoolViewSet(ModelViewSet):
     queryset = School.objects.all()
-    permission_classes = [IsAuthenticated, DRYPermissions]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = SchoolSerializer
     lookup_field = "external_id"
 

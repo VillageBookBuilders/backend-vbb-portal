@@ -10,7 +10,7 @@ from vbb_backend.users.models import UserTypeEnum
 
 class ProgramViewSet(ModelViewSet):
     queryset = Program.objects.all()
-    permission_classes = [IsAuthenticated, DRYPermissions]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = ProgramSerializer
     lookup_field = "external_id"
 

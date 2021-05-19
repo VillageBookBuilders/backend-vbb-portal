@@ -18,7 +18,7 @@ from vbb_backend.users.models import UserTypeEnum
 
 class SlotViewSet(ModelViewSet):
     queryset = Slot.objects.all()
-    permission_classes = [IsAuthenticated, DRYPermissions]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = SlotSerializer
     lookup_field = "external_id"
 
