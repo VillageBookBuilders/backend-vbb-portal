@@ -16,7 +16,7 @@ class StudentSessionViewSet(
     ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet
 ):
     queryset = StudentSessionAssociation.objects.all()
-    permission_classes = [IsAuthenticated, DRYPermissions]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = StudentSessionListSerializer
     lookup_field = "external_id"
 
