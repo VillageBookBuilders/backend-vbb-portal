@@ -1,4 +1,5 @@
 import pytest
+from vbb_backend.program.models import Program
 
 @pytest.mark.django_db
 def test_program_create(program_factory):
