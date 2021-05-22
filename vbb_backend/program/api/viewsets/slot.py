@@ -1,6 +1,5 @@
 import datetime
 from drf_yasg.utils import swagger_auto_schema
-from dry_rest_permissions.generics import DRYPermissions
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied, ValidationError
