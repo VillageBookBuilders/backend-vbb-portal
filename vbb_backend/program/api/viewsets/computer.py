@@ -13,7 +13,7 @@ from vbb_backend.users.models import UserTypeEnum
 
 class ComputerViewSet(ModelViewSet):
     queryset = Computer.objects.all()
-    permission_classes = [IsAuthenticated, DRYPermissions]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = ComputerSerializer
     lookup_field = "external_id"
 

@@ -16,7 +16,7 @@ class MentorSessionViewSet(
     ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet
 ):
     queryset = MentorSessionAssociation.objects.all()
-    permission_classes = [IsAuthenticated, DRYPermissions]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = MentorSessionListSerializer
     lookup_field = "external_id"
 

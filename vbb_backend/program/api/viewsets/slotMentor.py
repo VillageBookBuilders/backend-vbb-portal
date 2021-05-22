@@ -13,14 +13,14 @@ from vbb_backend.users.models import UserTypeEnum
 
 class MentorSlotViewSet(ModelViewSet):
     queryset = MentorSlotAssociation.objects.all()
-    permission_classes = [IsAuthenticated, DRYPermissions]
+    permission_classes = [IsAuthenticated]
     serializer_class = MentorSlotSerializer
     lookup_field = "external_id"
 
     def get_queryset(self):
         queryset = self.queryset
         user = self.request.user
-        slot = Slot.objects.get(external_id=self.kwargs.get("slot_external_id"))
+        slot = Slot.objects.get(external_id=self.kwargs.get("slot_base_external_id"))
         queryset = queryset.filter(slot=slot)
         if user.is_superuser:
             pass
@@ -32,7 +32,7 @@ class MentorSlotViewSet(ModelViewSet):
 
     def get_slot(self):
         return get_object_or_404(
-            self.get_queryset(), external_id=self.kwargs.get("slot_external_id")
+            self.get_queryset(), external_id=self.kwargs.get("slot_base_external_id")
         )
 
     def perform_create(self, serializer):
@@ -41,14 +41,14 @@ class MentorSlotViewSet(ModelViewSet):
 
 class MentorBookingViewSet(ModelViewSet):
     queryset = MentorSlotAssociation.objects.all()
-    permission_classes = [IsAuthenticated, DRYPermissions]
+    permission_classes = [IsAuthenticated]
     serializer_class = MentorSlotBookingSerializer
     lookup_field = "external_id"
 
     def get_queryset(self):
         queryset = self.queryset
         user = self.request.user
-        slot = Slot.objects.get(external_id=self.kwargs.get("slot_external_id"))
+        slot = Slot.objects.get(external_id=self.kwargs.get("slot_base_external_id"))
         queryset = queryset.filter(slot=slot)
         if user.is_superuser:
             pass
@@ -60,7 +60,7 @@ class MentorBookingViewSet(ModelViewSet):
 
     def get_slot(self):
         return get_object_or_404(
-            self.get_queryset(), external_id=self.kwargs.get("slot_external_id")
+            self.get_queryset(), external_id=self.kwargs.get("slot_base_external_id")
         )
 
     def perform_create(self, serializer):
