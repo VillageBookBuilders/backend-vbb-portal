@@ -1,4 +1,3 @@
-from dry_rest_permissions.generics import DRYPermissions
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
@@ -17,7 +16,7 @@ class StudentSessionViewSet(
     ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet
 ):
     queryset = StudentSessionAssociation.objects.all()
-    permission_classes = [IsAuthenticated, DRYPermissions]
+    permission_classes = [IsAuthenticated, ]
     serializer_class = StudentSessionListSerializer
     lookup_field = "external_id"
 
