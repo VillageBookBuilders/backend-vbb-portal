@@ -1,3 +1,4 @@
+from logging import fatal
 import factory
 
 from vbb_backend.program.models import *
@@ -10,6 +11,8 @@ class ProgramFactory(factory.django.DjangoModelFactory):
         model = Program
 
     name = factory.Faker("name")
+    latitude = factory.Faker("latitude")
+    longitude = factory.Faker("longitude")
     program_director = factory.SubFactory(ProgramDirectorFactory)
   
 
@@ -23,6 +26,8 @@ class SlotFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Slot
     computer = factory.SubFactory(ComputerFactory)
+    schedule_start = factory.Faker("date_time")
+    schedule_end = factory.Faker("date_time")
 
 
 class StudentSlotAssociationFactory(factory.django.DjangoModelFactory):
