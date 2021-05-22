@@ -27,3 +27,4 @@ drf-yasg==1.20.0 # For Api Docs
 djangorestframework-simplejwt==4.6.0  # https://github.com/SimpleJWT/django-rest-framework-simplejwt
 django-dry-rest-permissions==1.1.0 # https://github.com/FJNR-inc/dry-rest-permissions
 drf-nested-routers==0.91
+django-filter==2.4.0

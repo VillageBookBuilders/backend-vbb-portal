@@ -52,7 +52,8 @@ class SlotViewSet(ModelViewSet):
 
 
 class SlotFilterSet(filters.FilterSet):
-    computer_id = filters.UUIDFilter(field_name="computer_id__external_id")
+    computer = filters.UUIDFilter(field_name="computer__external_id")
+    program = filters.UUIDFilter(field_name="computer__program__external_id")
     max_students = filters.NumberFilter(field_name="max_students", lookup_expr="lte")
     language = filters.CharFilter(field_name="language")
     is_mentor_assigned = filters.BooleanFilter(field_name="is_mentor_assigned")
