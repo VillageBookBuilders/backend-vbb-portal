@@ -11,8 +11,8 @@ class SessionFactory(factory.django.DjangoModelFactory):
 
     slot = factory.SubFactory(SlotFactory)
     computer = factory.SubFactory(ComputerFactory)
-    start = factory.Faker("time")
-    end =   factory.Faker("time")
+    start = factory.Faker("date_time")
+    end =   factory.Faker("date_time")
 
 
   
