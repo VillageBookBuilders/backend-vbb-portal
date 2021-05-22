@@ -44,7 +44,7 @@ class MentorSlotSerializer(MentorSlotListSerializer):
                         "mentor": "Does not Exist. Are you sure the supplied value is a valid UUID"
                     }
                 )
-            attrs["program_director"] = mentor_obj
+            attrs["mentor"] = mentor_obj
         return super().validate(attrs)
 
 
@@ -68,5 +68,5 @@ class MentorSlotBookingSerializer(MentorSlotListSerializer):
                         "mentor": "Does not Exist. Are you sure the supplied value is a valid UUID"
                     }
                 )
-            attrs["program_director"] = mentor_obj
+            attrs["mentor"] = mentor_obj
         return super().validate(attrs)
