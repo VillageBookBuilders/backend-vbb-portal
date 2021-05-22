@@ -61,7 +61,7 @@ class MentorBookingViewSet(ModelViewSet):
 
     def get_slot(self):
         return get_object_or_404(
-            self.get_queryset(), external_id=self.kwargs.get("slot_base_external_id")
+            Slot.objects.all(), external_id=self.kwargs.get("slot_base_external_id")
         )
 
     def perform_create(self, serializer):
