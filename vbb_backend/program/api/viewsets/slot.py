@@ -108,9 +108,10 @@ class ReadOnlySlotViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
 
     
-    @action(methodes='GET', detail=False)
+    @action(methods=['GET'], detail=False)
     def get_unique_programs(self, request):
-        self.filter_queryset(self.get_queryset()).distinct("computer__program") 
-        programs = Slot.objects.values("computer__program")
+        qs = self.filter_queryset(self.get_queryset()).distinct("computer__program__name") 
+        computers = [slot.computer for slot in qs.select_related('computer__program')]
+        programs = [computer.program for computer in computers]
         data = MinimalProgramSerializer(programs, many=True)
         return Response(data.data)
