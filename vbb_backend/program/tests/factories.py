@@ -1,6 +1,5 @@
-from logging import fatal
 import factory
-
+from django.utils import timezone
 from vbb_backend.program.models import *
 
 from vbb_backend.users.tests.factories import *
@@ -26,8 +25,8 @@ class SlotFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Slot
     computer = factory.SubFactory(ComputerFactory)
-    schedule_start = factory.Faker("date_time")
-    schedule_end = factory.Faker("date_time")
+    schedule_start = factory.Faker("date_time", tzinfo=timezone.get_current_timezone())
+    schedule_end = factory.Faker("date_time", tzinfo=timezone.get_current_timezone())
 
 
 class StudentSlotAssociationFactory(factory.django.DjangoModelFactory):
