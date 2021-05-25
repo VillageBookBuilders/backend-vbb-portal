@@ -68,37 +68,56 @@ class ReadOnlySlotViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
-        start_day_of_week = self.request.GET.get("start_day_of_week", 0)
-        start_hour = self.request.GET.get("start_hour", 0)
-        start_minute = self.request.GET.get("start_minute", 0)
+        try:
+            start_day_of_week = int(self.request.GET.get("start_day_of_week", 0))
+        except:
+            raise ValidationError({'schedule': 'start_day_of_week must be a integer'})
+        try:
+            start_hour = int(self.request.GET.get("start_hour", 0))
+        except:
+            raise ValidationError({'schedule': 'start_hour must be a integer'})
+        try:
+            start_minute = int(self.request.GET.get("start_minute", 0))
+        except:
+            raise ValidationError({'schedule': 'start_minute must be a integer'})
+
+        try:
+            end_day_of_week = int(self.request.GET.get("end_day_of_week", 6))
+        except:
+            raise ValidationError({'schedule': 'end_day_of_week must be a integer'})
+        try:
+            end_hour = int(self.request.GET.get("end_hour", 23))
+        except:
+            raise ValidationError({'schedule': 'end_hour must be a integer'})
+        try:
+            end_minute = int(self.request.GET.get("end_minute", 59))
+        except:
+            raise ValidationError({'schedule': 'end_minute must be a integer'})
+
         schedule_start = Slot.DEAFULT_INIT_DATE + datetime.timedelta(
             days=int(start_day_of_week), hours=int(start_hour), minutes=int(start_minute)
         )
-        
-        end_day_of_week = self.request.GET.get("end_day_of_week", 6)
-        end_hour = self.request.GET.get("end_hour", 23)
-        end_minute = self.request.GET.get("end_minute", 59)
         schedule_end = Slot.DEAFULT_INIT_DATE + datetime.timedelta(
             days=int(end_day_of_week), hours=int(end_hour), minutes=int(end_minute)
         )
 
         if(int(start_day_of_week) < 0 or int(start_day_of_week) > 6):
-            raise ValidationError({"schedule": "Start day of week must be between 0 and 6"})
+            raise ValidationError({"schedule": "start_day_of_week must be between 0 and 6"})
 
         if(int(end_day_of_week) < 0 or int(end_day_of_week) > 6):
-            raise ValidationError({"schedule": "End day of week must be between 0 and 6"})
+            raise ValidationError({"schedule": "end_day_of_week must be between 0 and 6"})
 
         if(int(start_hour) < 0 or int(start_hour) > 23):
-            raise ValidationError({"schedule": "Start hour must be between 0 and 23"})
+            raise ValidationError({"schedule": "start_hour must be between 0 and 23"})
 
         if(int(end_hour) < 0 or int(end_hour) > 23):
-            raise ValidationError({"schedule": "End hour must be between 0 and 23"})
+            raise ValidationError({"schedule": "end_hour must be between 0 and 23"})
 
         if(int(start_minute) < 0 or int(start_minute) > 59):
-            raise ValidationError({"schedule": "Start minute must be between 0 and 59"})
+            raise ValidationError({"schedule": "start_minute must be between 0 and 59"})
 
         if(int(end_minute) < 0 or int(end_minute) > 59):
-            raise ValidationError({"schedule": "End minute must be between 0 and 59"})
+            raise ValidationError({"schedule": "end_minute must be between 0 and 59"})
         
         if(schedule_start > schedule_end):
             raise ValidationError({"schedule": "Start date cannot be after end date"})
