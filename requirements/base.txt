@@ -28,3 +28,4 @@ djangorestframework-simplejwt==4.6.0  # https://github.com/SimpleJWT/django-rest
 django-dry-rest-permissions==1.1.0 # https://github.com/FJNR-inc/dry-rest-permissions
 drf-nested-routers==0.91
 django-filter==2.4.0
+pytest-factoryboy==2.1.0 # https://github.com/pytest-dev/pytest-factoryboy
