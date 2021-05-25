@@ -1,10 +1,11 @@
-from logging import fatal
 import factory
-
+from django.utils import timezone
 from vbb_backend.program.models import *
 
 from vbb_backend.users.tests.factories import *
-
+from faker import Faker
+from datetime import timedelta
+fake = Faker()
 
 class ProgramFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -26,9 +27,9 @@ class SlotFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Slot
     computer = factory.SubFactory(ComputerFactory)
-    schedule_start = factory.Faker("date_time")
-    schedule_end = factory.Faker("date_time")
-
+    schedule_start= Slot.DEAFULT_INIT_DATE + fake.time_delta()
+    schedule_end= Slot.DEAFULT_INIT_DATE + fake.time_delta()
+    
 
 class StudentSlotAssociationFactory(factory.django.DjangoModelFactory):
     class Meta:

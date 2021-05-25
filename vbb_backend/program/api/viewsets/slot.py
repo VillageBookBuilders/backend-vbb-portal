@@ -15,6 +15,7 @@ from vbb_backend.program.api.serializers.slot import (
     MinimalSlotSerializer,
     SlotSerializer,
 )
+from vbb_backend.program.api.serializers.program import MinimalProgramSerializer
 from vbb_backend.program.models import Computer, Program, Slot
 from vbb_backend.users.models import UserTypeEnum
 
@@ -104,3 +105,12 @@ class ReadOnlySlotViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             raise ValidationError({"schedule": "Start date cannot be after end date"})
 
         return queryset.filter(Q(schedule_start__gte=schedule_start), Q(schedule_end__lte=schedule_end))
+
+
+    
+    @action(methods=['GET'], detail=False)
+    def get_unique_programs(self, request):
+        qs = self.filter_queryset(self.get_queryset()).select_related("computer","computer__program").distinct("computer__program") 
+        programs = [slot.computer.program for slot in qs]
+        data = MinimalProgramSerializer(programs, many=True)
+        return Response(data.data)

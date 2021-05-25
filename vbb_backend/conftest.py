@@ -12,6 +12,10 @@ that span multiple modules.
 def media_storage(settings, tmpdir):
     settings.MEDIA_ROOT = tmpdir.strpath
 
+@pytest.fixture(autouse=True)
+def enable_db_access_for_all_tests(db):
+    pass
+
 register(SlotFactory)
 register(ComputerFactory)
 
