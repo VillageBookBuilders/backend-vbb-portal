@@ -27,8 +27,6 @@ class MentorNoAuthUserSerializer(serializers.ModelSerializer):
             "phone",
             "city",
             "notes",
-            "password",
-            "email"
         )
 
     def validate(self, attrs):
@@ -54,13 +52,17 @@ class MentorNoAuthSerializer(serializers.ModelSerializer):
                 instance = user.save()
                 attrs["user"] = instance
             else:
-                try:
-                    user["password"] = make_password(user["password"])
-                    user = MentorNoAuthUserSerializer(data=user)
-                    user.is_valid(raise_exception=True)
-                    instance = user.save(email=random_char(20) + "@vbb.com")
-                    attrs["user"] = instance
-                except:
-                    raise KeyError
+                user = MentorNoAuthUserSerializer(data=user)
+                user.is_valid(raise_exception=True)
+                instance = user.save(email=random_char(20) + "@vbb.com")
+                attrs["user"] = instance
+                # try:
+                #     user["password"] = make_password(user["password"])
+                #     user = MentorNoAuthUserSerializer(data=user)
+                #     user.is_valid(raise_exception=True)
+                #     instance = user.save(email=random_char(20) + "@vbb.com")
+                #     attrs["user"] = instance
+                # except:
+                #     raise KeyError
 
             return super().validate(attrs)
