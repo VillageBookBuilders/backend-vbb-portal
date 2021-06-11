@@ -1,34 +1,20 @@
 import datetime
-from config.celery_app import app
-from django_celery_beat.models import PeriodicTask, IntervalSchedule
+from celery.decorators import periodic_task
+from celery.schedules import crontab
 from vbb_backend.session.models import Session
 from vbb_backend.program.models import Slot
 
 
-schedule, created = IntervalSchedule.objects.get_or_create(
-    every=30,
-    period=IntervalSchedule.MINUTES,
-)
-
-PeriodicTask.objects.get_or_create(
-    interval=schedule,
-    name="get_sessions",
-    task='vbb_backend.session.tasks.get_sessions',
-)
-
-@app.task
+@periodic_task(run_every=crontab(minute="*/1"))
 def get_sessions():
-    queryset = Session.objects.all()
-    qs = queryset.filter(slot__isnull=False)
-
     now = datetime.datetime.now()
-
-    todays_time = Slot.DEAFULT_INIT_DATE + datetime.timedelta(
-            days=int(now.weekday()), hours=int(now.hour), minutes=int(now.minute)
+    schedule_start = Slot.DEAFULT_INIT_DATE + datetime.timedelta(
+            days=now.weekday(), hours=now.hour, minutes=now.minute
         )
+    print(schedule_start)
+    session_qs = Session.objects.filter(slot__isnull=False)
+    slot_qs = Slot.objects.filter(schedule_start__gt=schedule_start.replace(tzinfo=datetime.timezone.utc)).exclude(pk__in=session_qs)
+    print(len(slot_qs))
 
-    for session in qs:
-        if session.slot.schedule_start < todays_time.replace(tzinfo=datetime.timezone.utc):
-            print('session passed for this week')
-        else:
-            print('session will come')
+    for session in slot_qs:
+            print(f'create session: {session}')
