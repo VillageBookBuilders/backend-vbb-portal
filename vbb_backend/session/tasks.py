@@ -19,4 +19,4 @@ def get_sessions():
     print(len(slot_qs))
 
     for session in slot_qs:
-            print(f'create session: {session}')
+        print(f'create session: {session}')
