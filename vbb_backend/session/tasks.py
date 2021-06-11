@@ -13,7 +13,9 @@ def get_sessions():
         )
     print(schedule_start)
     session_qs = Session.objects.filter(slot__isnull=False)
-    slot_qs = Slot.objects.filter(schedule_start__gt=schedule_start.replace(tzinfo=datetime.timezone.utc)).exclude(pk__in=session_qs)
+    slot_qs = Slot.objects\
+        .filter(schedule_start__gt=schedule_start.replace(tzinfo=datetime.timezone.utc))\
+        .exclude(pk__in=session_qs)
     print(len(slot_qs))
 
     for session in slot_qs:
