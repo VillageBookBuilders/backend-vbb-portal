@@ -9,14 +9,14 @@ from vbb_backend.program.models import Slot
 def get_sessions():
     now = datetime.datetime.now()
     schedule_start = Slot.DEAFULT_INIT_DATE + datetime.timedelta(
-            days=now.weekday(), hours=now.hour, minutes=now.minute
-        )
+        days=now.weekday(), hours=now.hour, minutes=now.minute
+    )
     print(schedule_start)
     session_qs = Session.objects.filter(slot__isnull=False)
-    slot_qs = Slot.objects\
-        .filter(schedule_start__gt=schedule_start.replace(tzinfo=datetime.timezone.utc))\
-        .exclude(pk__in=session_qs)
+    slot_qs = Slot.objects.filter(
+        schedule_start__gt=schedule_start.replace(tzinfo=datetime.timezone.utc)
+        ).exclude(pk__in=session_qs)
     print(len(slot_qs))
 
     for session in slot_qs:
-            print(f'create session: {session}')
+        print(f"create session: {session}")
