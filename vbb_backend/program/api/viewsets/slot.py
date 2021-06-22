@@ -1,14 +1,10 @@
-import datetime
 from uuid import UUID
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.generics import get_object_or_404
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from django_filters import rest_framework as filters
 from django.db.models import Q
 
@@ -17,7 +13,7 @@ from vbb_backend.program.api.serializers.slot import (
     SlotSerializer,
 )
 from vbb_backend.program.api.serializers.program import MinimalProgramSerializer
-from vbb_backend.program.models import Computer, Program, Slot
+from vbb_backend.program.models import Computer, Slot
 from vbb_backend.users.models import UserTypeEnum
 
 
@@ -71,7 +67,9 @@ class SlotViewSet(ModelViewSet):
 
     def _check_min_max(self, field, value, min_value, max_value):
         if int(value) < min_value or int(value) > max_value:
-            raise ValidationError({"schedule": f"{field} must be between {min_value} and {max_value}"})
+            raise ValidationError(
+                {"schedule": f"{field} must be between {min_value} and {max_value}"}
+            )
 
     def get_allowed_queryset(self):
         queryset = self.queryset
@@ -122,17 +120,14 @@ class SlotViewSet(ModelViewSet):
             return False
         return str(uuid_obj) == uuid_to_test
 
-
     def get_computer(self, computer_id):
         return get_object_or_404(Computer, external_id=computer_id)
 
     def perform_create(self, serializer):
         computer_id = self.request.data.get("computer_external_id")
-        
-        if(not computer_id):
+        if not computer_id:
             raise ValidationError({"message": "computer id required"})
-
-        if(not self.check_if_uuid(computer_id)):
+        if not self.check_if_uuid(computer_id):
             raise ValidationError({"message": "computer id must be valid UUID"})
 
         serializer.save(computer=self.get_computer(computer_id))
