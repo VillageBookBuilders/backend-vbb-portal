@@ -43,7 +43,8 @@ class Program(BaseUUIDModel):
     # primary information
     name = models.CharField(max_length=40, blank=False)
     time_zone = models.CharField(max_length=32, choices=TIMEZONES)
-    # todo add field type = models.ForeignKey(ContentType) types include excellent, good, poor, gov/low-fee, special status
+    # todo add field type = models.ForeignKey(ContentType)
+    # types include excellent, good, poor, gov/low-fee, special status
     latitude = models.DecimalField(max_digits=8, decimal_places=3)
     longitude = models.DecimalField(max_digits=8, decimal_places=3)
     program_director = models.ForeignKey(
@@ -116,7 +117,9 @@ class Program(BaseUUIDModel):
     chief_contact = models.CharField(max_length=254, null=True, blank=True)
     ministry_education_contact = models.TextField(null=True, blank=True)
     notes = models.TextField(
-        help_text="comments, suggestions, notes, events, open-house dates, mentor program break dates, internet connectivity, power avalibility, state of infrastructure, etc",
+        help_text="comments, suggestions, notes, events, open-house dates,\
+            mentor program break dates, internet connectivity, power avalibility,\
+            state of infrastructure, etc",
         null=True,
         blank=True,
     )
@@ -209,8 +212,10 @@ class School(BaseUUIDModel):  # LATER keep track of student attendance, and grad
         help_text="mission, values, vision, pitch", null=True, blank=True
     )
     """
-    we need to figure out if we want static school pages or populating schoo pages? for example, day in the life of a student at a school, we need to figure this out @sarthak
-    then begs the questions do we even need this many fields in the backend like most of these could just be static on the front-end what is our data science plan
+    we need to figure out if we want static school pages or populating schoo pages?
+    for example, day in the life of a student at a school, we need to figure this out @sarthak
+    then begs the questions do we even need this many fields in the backend like most
+    of these could just be static on the front-end what is our data science plan
     """
     school_successes = models.TextField(null=True, blank=True)
     school_goals = models.TextField(null=True, blank=True)
@@ -218,8 +223,9 @@ class School(BaseUUIDModel):  # LATER keep track of student attendance, and grad
     studentNum = models.IntegerField(null=True, blank=True)
     teacherNum = models.IntegerField(null=True, blank=True)
     vbb_rating = models.TextField(null=True, blank=True)
-    # todo add field type = models.ForeignKey(ContentType) types include excellent, good, poor, gov/low-fee, special status
-    # figure out how school data & reporting is should be stored in portal or in sheets
+    # todo add field type = models.ForeignKey(ContentType) types include excellent,
+    # good, poor, gov/low-fee, special status figure out how school data & reporting
+    # is should be stored in portal or in sheets
     monthly_fundingDollars = models.DecimalField(
         max_digits=10, decimal_places=6, null=True, blank=True
     )
@@ -228,7 +234,8 @@ class School(BaseUUIDModel):  # LATER keep track of student attendance, and grad
 
     # link to 3rd party LMS ?
     # has studens (students have foreign keys back to school)
-    # has a headmaster (usually the same as program director) ("has" means these things have foreign keys back to school)
+    # has a headmaster (usually the same as program director)
+    # ("has" means these things have foreign keys back to school)
     # has classrooms ("has" means these things have foreign keys back to school)
     # has teachers and students ("has" means these things have foreign keys back to school)
 
@@ -276,7 +283,8 @@ class Book(BaseUUIDModel):
     !!! We need to first get koha up & running & excel training for all teachers, librarians, & headmasters
     This Model Represents a book that can be checked out from a VBB Library
         title: the title of the book
-        isbn: the 13 digit identifying barcode on the back of the book (TODO: may need to adjustthis to allow for ISBN-9)
+        isbn: the 13 digit identifying barcode on the back of the book
+        (TODO: may need to adjust this to allow for ISBN-9)
         library: the library the book belongs to
         reading_level: the grade level this book is associated with (ie 0 is kindergarten, 12 is 12th grade level, etc)
         is_available: set to true when the book is not lended to anyone and is available at the library
@@ -343,7 +351,8 @@ class Slot(BaseUUIDModel):
     This Model Represents a slot that the mentor program decides to have with one of its computers,
     **eg , a slot can be for a Computer A for firday 10AM to friday 12AM**
     The slot is not editable, once the slot is to be updated the model object has to be deleted and recreated
-    The slot object has no starting time or ending time, slots made are run throughout the year, to cancel a slot the slot has to be deleted
+    The slot object has no starting time or ending time, slots made are run throughout the year,
+    to cancel a slot the slot has to be deleted
     The slot can be of any duration less than 24 hours
 
     the slot start and end refer to the start and end of a session in the slot,
@@ -360,7 +369,7 @@ class Slot(BaseUUIDModel):
     slot_number = models.IntegerField(null=True, blank=True)
     # ? should we have a way to ID the slots across computers or programs? like an index to help admins find slots?
     # todo remove computer model as in the apis we can make implicit associations exlicit in apis
-    #! is the following implicitly stored
+    # is the following implicitly stored
     computer = models.ForeignKey(
         Computer,
         on_delete=models.PROTECT,
