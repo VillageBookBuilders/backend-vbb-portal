@@ -7,7 +7,7 @@ from vbb_backend.program.api.serializers.slotMentor import (
     MentorSlotBookingSerializer,
     MentorSlotSerializer,
 )
-from vbb_backend.program.models import Program, Slot, MentorSlotAssociation
+from vbb_backend.program.models import Slot, MentorSlotAssociation
 from vbb_backend.users.models import UserTypeEnum
 
 
