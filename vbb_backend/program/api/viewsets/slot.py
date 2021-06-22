@@ -1,4 +1,5 @@
 import datetime
+from uuid import UUID
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.decorators import action
@@ -75,9 +76,8 @@ class SlotViewSet(ModelViewSet):
     def get_allowed_queryset(self):
         queryset = self.queryset
         user = self.request.user
-        computer = Computer.objects.get(external_id=self.kwargs.get("computer_external_id"))
 
-        queryset = queryset.filter(computer=computer)
+        queryset = queryset.filter(external_id=self.kwargs.get("external_id"))
         if user.is_superuser:
             pass
         elif user.user_type in [UserTypeEnum.HEADMASTER.value]:
@@ -114,6 +114,27 @@ class SlotViewSet(ModelViewSet):
             raise ValidationError({"schedule": "Start date cannot be after end date"})
 
         return queryset.filter(Q(schedule_start__gte=schedule_start), Q(schedule_end__lte=schedule_end))
+
+    def check_if_uuid(self, uuid_to_test):
+        try:
+            uuid_obj = UUID(uuid_to_test)
+        except ValueError:
+            return False
+        return str(uuid_obj) == uuid_to_test
+
+
+    def get_computer(self, computer_id):
+        return get_object_or_404(Computer, external_id=computer_id)
+
+    def perform_create(self, serializer):
+        if(not self.request.data.get("computer_external_id")):
+            raise ValidationError({"message": "computer id required"})
+
+        computer_id = self.request.data.get("computer_external_id")
+        if(not self.check_if_uuid(computer_id)):
+            raise ValidationError({"message": "computer id must be valid UUID"})
+
+        serializer.save(computer=self.get_computer(computer_id))
 
     @action(methods=["GET"], detail=False)
     def get_unique_programs(self, request):
