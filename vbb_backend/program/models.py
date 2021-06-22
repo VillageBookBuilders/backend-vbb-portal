@@ -342,7 +342,7 @@ class Slot(BaseUUIDModel):
 
     @staticmethod
     def get_slot_time(day, hour, minute):
-        return Slot.DEAFULT_INIT_DATE + timedelta(days=day, hours=hour, minutes=minute)
+        return Slot.DEAFULT_INIT_DATE + timedelta(days=int(day), hours=int(hour), minutes=int(minute))
 
     def save(self, *args, **kwargs):
 
