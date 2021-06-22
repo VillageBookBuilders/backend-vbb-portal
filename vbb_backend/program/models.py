@@ -1,5 +1,5 @@
 import enum
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db import models
 from django.db.models.base import Model
 from rest_framework.exceptions import ValidationError
@@ -101,7 +101,6 @@ class Program(BaseUUIDModel):
     )
 
     ACCESS_CONTROL = {"program_director": [UserTypeEnum.PROGRAM_MANAGER.value]}
-
 
 
 class HeadmastersProgramAssociation(BaseUUIDModel):
@@ -300,7 +299,6 @@ class Computer(BaseUUIDModel):
         return f"{str(self.program)} {str(self.computer_number)} + ({self.computer_email})"
 
 
-
 class Slot(BaseUUIDModel):
     """
     This Model Represents a slot that the mentor program decides to have with one of its computers,
@@ -341,6 +339,10 @@ class Slot(BaseUUIDModel):
 
     students = models.ManyToManyField("users.Student", through="StudentSlotAssociation")
     mentors = models.ManyToManyField("users.Mentor", through="MentorSlotAssociation")
+
+    @staticmethod
+    def get_slot_time(day, hour, minute):
+        return Slot.DEAFULT_INIT_DATE + timedelta(days=day, hours=hour, minutes=minute)
 
     def save(self, *args, **kwargs):
 

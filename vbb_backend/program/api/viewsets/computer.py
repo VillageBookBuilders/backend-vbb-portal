@@ -13,17 +13,15 @@ from vbb_backend.users.models import UserTypeEnum
 
 class ComputerViewSet(ModelViewSet):
     queryset = Computer.objects.all()
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [
+        IsAuthenticated,
+    ]
     serializer_class = ComputerSerializer
     lookup_field = "external_id"
 
     def get_queryset(self):
         queryset = self.queryset
         user = self.request.user
-        program = Program.objects.get(
-            external_id=self.kwargs.get("program_external_id")
-        )
-        queryset = queryset.filter(program=program)
         if user.is_superuser:
             pass
         elif user.user_type in [UserTypeEnum.HEADMASTER.value]:
@@ -32,10 +30,5 @@ class ComputerViewSet(ModelViewSet):
             raise PermissionDenied()
         return queryset
 
-    def get_program(self):
-        return get_object_or_404(
-            Program, external_id=self.kwargs.get("program_external_id")
-        )
-
     def perform_create(self, serializer):
-        serializer.save(program=self.get_program())
+        serializer.save()
