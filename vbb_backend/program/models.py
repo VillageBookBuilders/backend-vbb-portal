@@ -336,7 +336,7 @@ class Computer(BaseUUIDModel):
     software_Notes = models.TextField(null=True, blank=True)
 
     """"
-    connection to andriodx86, etc, remote control etc, add as needed. 
+    connection to andriodx86, etc, remote control etc, add as needed.
     ? again not sure what sure what information should we stored and what should just be static ?
     """
 
