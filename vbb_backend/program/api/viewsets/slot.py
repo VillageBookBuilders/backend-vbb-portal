@@ -127,10 +127,11 @@ class SlotViewSet(ModelViewSet):
         return get_object_or_404(Computer, external_id=computer_id)
 
     def perform_create(self, serializer):
-        if(not self.request.data.get("computer_external_id")):
+        computer_id = self.request.data.get("computer_external_id")
+        
+        if(not computer_id):
             raise ValidationError({"message": "computer id required"})
 
-        computer_id = self.request.data.get("computer_external_id")
         if(not self.check_if_uuid(computer_id)):
             raise ValidationError({"message": "computer id must be valid UUID"})
 
