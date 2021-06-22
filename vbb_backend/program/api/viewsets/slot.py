@@ -111,7 +111,9 @@ class SlotViewSet(ModelViewSet):
         if schedule_start > schedule_end:
             raise ValidationError({"schedule": "Start date cannot be after end date"})
 
-        return queryset.filter(Q(schedule_start__gte=schedule_start), Q(schedule_end__lte=schedule_end))
+        return queryset.filter(
+            Q(schedule_start__gte=schedule_start), Q(schedule_end__lte=schedule_end)
+        )
 
     def check_if_uuid(self, uuid_to_test):
         try:
