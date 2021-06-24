@@ -1,5 +1,5 @@
 import datetime
-from celery.decorators import periodic_task
+from celery.decorators import periodic_task, task
 from celery.schedules import crontab
 from vbb_backend.session.models import Session
 from vbb_backend.program.models import Slot
@@ -23,27 +23,54 @@ from vbb_backend.program.models import Slot
     #
     # every time we save a slot create a session through a task
     # every 2 hrs check every slot
-def get_schedule_time():
 
-
-@periodic_task(run_every=crontab(minute="*/120"))
-def get_sessions_future():
+def get_current_time():
     now = datetime.datetime.now()
-    schedule_start = Slot.DEAFULT_INIT_DATE + datetime.timedelta(
-        days=now.weekday(), hours=now.hour, minutes=now.minute
+    time_now = Slot.get_slot_time(
+        day=now.weekday(), hour=now.hour, minute=now.minute
     )
-    print(schedule_start)
+    return time_now
 
-    session_qs = Session.objects.filter(slot__isnull=False)
+def get_all_sessions():
+    return Session.objects.all()
+
+def save_session(slot):
+    print(f'\n\n\n SAVE SESSION \n\n\n')
+    print(f'slot start_date: {slot.start_date}')
+    Session.objects.create(
+        start=slot.schedule_start,
+        end=slot.schedule_end,
+        slot_id=slot.pk,
+        computer_id=slot.computer_id
+    )
+
+@task
+def create_session(slot):
+    print(f'CREATE SETTION {slot}')
+    save_session(slot)
+
+@periodic_task(run_every=crontab(minute="*/2"))
+def get_sessions_future():
+    time_now = get_current_time()
+    session_qs = get_all_sessions()
+
     slot_qs = Slot.objects.filter(
-        schedule_start__gt=schedule_start.replace(tzinfo=datetime.timezone.utc)
-    ).exclude(pk__in=session_qs)
-    print(len(slot_qs))
+        schedule_start__gt=time_now.replace(tzinfo=datetime.timezone.utc)
+    ).exclude(pk__in=session_qs.values_list('slot_id'))
 
-    for session in slot_qs:
-        print(f"create session: {session}")
+    for slot in slot_qs:
+        print(f"create future session: {slot}")
+        save_session(slot)
 
-@periodic_task(run_every=crontab(minute="*/30"))
+@periodic_task(run_every=crontab(minute="*/1"))
 def get_sessions_previous():
-    noe = datetime.datetime.now()
-    schedule_start = Slot.get_slot_time(start_day_of_week, start_hour, start_minute)
+    time_now = get_current_time()
+    session_qs = get_all_sessions()
+
+    slot_qs = Slot.objects.filter(
+        schedule_start__lt=time_now.replace(tzinfo=datetime.timezone.utc)
+    ).exclude(pk__in=session_qs.values_list('slot_id'))
+
+    for slot in slot_qs:
+        print(f"create past session: {slot.pk}")
+        save_session(slot)
