@@ -1,5 +1,5 @@
 import enum
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.db import models
 from rest_framework.exceptions import ValidationError
 
@@ -398,9 +398,10 @@ class Slot(BaseUUIDModel):
 
     @staticmethod
     def get_slot_time(day, hour, minute):
-        return Slot.DEAFULT_INIT_DATE + timedelta(
+        slot_time = Slot.DEAFULT_INIT_DATE + timedelta(
             days=int(day), hours=int(hour), minutes=int(minute)
         )
+        return slot_time.replace(tzinfo=timezone.utc)
 
     def save(self, *args, **kwargs):
 
