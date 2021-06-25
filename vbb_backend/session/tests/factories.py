@@ -1,7 +1,7 @@
 import factory
 from django.utils import timezone
-from vbb_backend.session.models import *
-from vbb_backend.program.tests.factories import *
+from vbb_backend.session.models import Session, StudentSessionAssociation, MentorSessionAssociation
+from vbb_backend.program.tests.factories import SlotFactory, ComputerFactory, StudentFactory, MentorFactory
 
 
 class SessionFactory(factory.django.DjangoModelFactory):
@@ -11,7 +11,7 @@ class SessionFactory(factory.django.DjangoModelFactory):
     slot = factory.SubFactory(SlotFactory)
     computer = factory.SubFactory(ComputerFactory)
     start = factory.Faker("date_time", tzinfo=timezone.utc)
-    end =   factory.Faker("date_time", tzinfo=timezone.utc)
+    end = factory.Faker("date_time", tzinfo=timezone.utc)
 
 
 class StudentSessionAssociationFactory(factory.django.DjangoModelFactory):
