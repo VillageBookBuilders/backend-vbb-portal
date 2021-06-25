@@ -4,7 +4,6 @@ from vbb_backend.session.models import *
 from vbb_backend.program.tests.factories import *
 
 
-
 class SessionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Session
@@ -15,19 +14,19 @@ class SessionFactory(factory.django.DjangoModelFactory):
     end =   factory.Faker("date_time", tzinfo=timezone.utc)
 
 
-  
 class StudentSessionAssociationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = StudentSessionAssociation
     student = factory.SubFactory(StudentFactory)
     session = factory.SubFactory(SessionFactory)
-   
+
 
 class MentorSessionAssociationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = MentorSessionAssociation
     mentor = factory.SubFactory(MentorFactory)
     session = factory.SubFactory(SessionFactory)
+
 
 class SessionMentorStudentFactory(MentorSessionAssociationFactory, StudentSessionAssociationFactory):
     mentor_session = factory.RelatedFactory(
