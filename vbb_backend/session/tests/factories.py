@@ -11,8 +11,8 @@ class SessionFactory(factory.django.DjangoModelFactory):
 
     slot = factory.SubFactory(SlotFactory)
     computer = factory.SubFactory(ComputerFactory)
-    start = factory.Faker("date_time", tzinfo=timezone.get_current_timezone())
-    end =   factory.Faker("date_time", tzinfo=timezone.get_current_timezone())
+    start = factory.Faker("date_time", tzinfo=timezone.utc)
+    end =   factory.Faker("date_time", tzinfo=timezone.utc)
 
 
   
