@@ -137,10 +137,11 @@ class SlotViewSet(ModelViewSet):
     @action(methods=["GET"], detail=False)
     def get_unique_programs(self, request):
         qs = (
-            self.filter_queryset(self.get_queryset())
+            self.queryset
             .select_related("computer", "computer__program")
             .distinct("computer__program")
         )
+
         programs = [slot.computer.program for slot in qs]
         data = MinimalProgramSerializer(programs, many=True)
         return Response(data.data)
