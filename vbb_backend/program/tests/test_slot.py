@@ -12,7 +12,9 @@ def test_slot_create(slot_factory):
 
 
 @pytest.fixture(autouse=True)
-def setup_test_get_unique_programs_from_slot(slot_factory, computer_factory, program_factory):
+def setup_test_get_unique_programs_from_slot(
+    slot_factory, computer_factory, program_factory
+):
     p1 = program_factory.create(name="program1")
     p2 = program_factory.create(name="program2")
     c1 = computer_factory.create(program=p1)
@@ -24,12 +26,12 @@ def setup_test_get_unique_programs_from_slot(slot_factory, computer_factory, pro
 
 
 def test_get_unique_programs_from_slot(rf, admin_user):
-    request = rf.get('/slot/get_unique_programs')
+    request = rf.get("/slot/get_unique_programs")
     force_authenticate(request, user=admin_user)
-    view = SlotViewSet.as_view({'get': 'get_unique_programs'})
+    view = SlotViewSet.as_view({"get": "get_unique_programs"})
 
     response = view(request).render()
-    responseJSON = json.loads(response.content.decode('utf-8'))
+    responseJSON = json.loads(response.content.decode("utf-8"))
     for obj in responseJSON:
-        assert obj['name'] == 'program1' or obj['name'] == 'program2'
+        assert obj["name"] == "program1" or obj["name"] == "program2"
     assert len(responseJSON) == 2
