@@ -3,13 +3,13 @@ from django.utils import timezone
 from vbb_backend.session.models import (
     Session,
     StudentSessionAssociation,
-    MentorSessionAssociation
+    MentorSessionAssociation,
 )
 from vbb_backend.program.tests.factories import (
     SlotFactory,
     ComputerFactory,
     StudentFactory,
-    MentorFactory
+    MentorFactory,
 )
 
 
@@ -39,7 +39,9 @@ class MentorSessionAssociationFactory(factory.django.DjangoModelFactory):
     session = factory.SubFactory(SessionFactory)
 
 
-class SessionMentorStudentFactory(MentorSessionAssociationFactory, StudentSessionAssociationFactory):
+class SessionMentorStudentFactory(
+    MentorSessionAssociationFactory, StudentSessionAssociationFactory
+):
     mentor_session = factory.RelatedFactory(
         MentorSessionAssociationFactory,
         factory_related_name="session",
