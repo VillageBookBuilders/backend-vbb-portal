@@ -1,4 +1,5 @@
 import datetime
+import config.celery_app as app
 from celery.decorators import periodic_task, task
 from celery.schedules import crontab
 from vbb_backend.session.models import Session
@@ -35,8 +36,7 @@ def get_all_sessions():
     return Session.objects.all()
 
 def save_session(slot):
-    print(f'\n\n\n SAVE SESSION \n\n\n')
-    print(f'slot start_date: {slot.start_date}')
+    print(f'SAVING SESSION')
     Session.objects.create(
         start=slot.schedule_start,
         end=slot.schedule_end,
@@ -44,12 +44,13 @@ def save_session(slot):
         computer_id=slot.computer_id
     )
 
-@task
-def create_session(slot):
-    print(f'CREATE SETTION {slot}')
+@app.task(name="create session from slot save")
+def create_session(slot_id):
+    print(type(slot_id))
+    slot = Slot.objects.filter(pk=slot_id).first()
     save_session(slot)
 
-@periodic_task(run_every=crontab(minute="*/2"))
+@periodic_task(run_every=crontab(minute="*/120"))
 def get_sessions_future():
     time_now = get_current_time()
     session_qs = get_all_sessions()
@@ -59,10 +60,9 @@ def get_sessions_future():
     ).exclude(pk__in=session_qs.values_list('slot_id'))
 
     for slot in slot_qs:
-        print(f"create future session: {slot}")
         save_session(slot)
 
-@periodic_task(run_every=crontab(minute="*/1"))
+@periodic_task(run_every=crontab(minute="*/30"))
 def get_sessions_previous():
     time_now = get_current_time()
     session_qs = get_all_sessions()
@@ -72,5 +72,4 @@ def get_sessions_previous():
     ).exclude(pk__in=session_qs.values_list('slot_id'))
 
     for slot in slot_qs:
-        print(f"create past session: {slot.pk}")
         save_session(slot)
