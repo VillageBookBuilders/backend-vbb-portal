@@ -31,6 +31,17 @@ def create_session(slot_id):
     save_session(slot)
 
 
+@periodic_task(run_every=crontab(minute=0, hour=0))
+def check_all_slots_for_session():
+    time_now = get_current_time()
+    session_qs = get_all_sessions()
+
+    slot_qs = Slot.objects.all().exclude(pk__in=session_qs.values_list("slot_id"))
+
+    for slot in slot_qs:
+        save_session(slot)
+
+
 @periodic_task(run_every=crontab(minute="*/30"))
 def get_sessions_previous():
     time_now = get_current_time()
