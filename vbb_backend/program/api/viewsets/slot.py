@@ -1,13 +1,8 @@
-import datetime
-from drf_yasg.utils import swagger_auto_schema
-from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import PermissionDenied, ValidationError
-from rest_framework.generics import get_object_or_404
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from django_filters import rest_framework as filters
 from django.db.models import Q
 
@@ -16,7 +11,7 @@ from vbb_backend.program.api.serializers.slot import (
     SlotSerializer,
 )
 from vbb_backend.program.api.serializers.program import MinimalProgramSerializer
-from vbb_backend.program.models import Computer, Program, Slot
+from vbb_backend.program.models import Computer, Slot
 from vbb_backend.users.models import UserTypeEnum
 
 
