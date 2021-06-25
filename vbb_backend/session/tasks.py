@@ -26,7 +26,6 @@ def save_session(slot):
 
 @app.task(name="create session from slot save")
 def create_session(slot_id):
-    print(type(slot_id))
     slot = Slot.objects.filter(pk=slot_id).first()
     save_session(slot)
 
