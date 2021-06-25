@@ -14,6 +14,8 @@ from vbb_backend.program.api.serializers.program import MinimalProgramSerializer
 from vbb_backend.program.models import Computer, Slot
 from vbb_backend.users.models import UserTypeEnum
 
+from vbb_backend.session.tasks import create_session
+
 
 # class SlotViewSet(ModelViewSet):
 #     queryset = Slot.objects.all()
@@ -109,6 +111,10 @@ class SlotViewSet(ModelViewSet):
             raise ValidationError({"schedule": "Start date cannot be after end date"})
 
         return queryset.filter(Q(schedule_start__gte=schedule_start), Q(schedule_end__lte=schedule_end))
+
+    def perform_create(self, serializer):
+        slot = serializer.save()
+        create_session.apply_async((slot.pk,), countdown=5)
 
     @action(methods=["GET"], detail=False)
     def get_unique_programs(self, request):
