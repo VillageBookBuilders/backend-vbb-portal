@@ -48,4 +48,3 @@ class SessionMentorStudentFactory(MentorSessionAssociationFactory, StudentSessio
         StudentSessionAssociationFactory,
         factory_related_name="session",
     )
-    ``
