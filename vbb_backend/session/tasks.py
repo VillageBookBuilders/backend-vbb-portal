@@ -8,9 +8,7 @@ from vbb_backend.program.models import Slot
 
 def get_current_time():
     now = datetime.datetime.now()
-    time_now = Slot.get_slot_time(
-        day=now.weekday(), hour=now.hour, minute=now.minute
-    )
+    time_now = Slot.get_slot_time(day=now.weekday(), hour=now.hour, minute=now.minute)
     return time_now
 
 
@@ -23,8 +21,9 @@ def save_session(slot):
         start=slot.schedule_start,
         end=slot.schedule_end,
         slot_id=slot.pk,
-        computer_id=slot.computer_id
+        computer_id=slot.computer_id,
     )
+
 
 @app.task(name="create session from slot save")
 def create_session(slot_id):
