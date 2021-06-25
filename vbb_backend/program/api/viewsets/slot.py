@@ -135,10 +135,7 @@ class SlotViewSet(ModelViewSet):
         if not self.check_if_uuid(computer_id):
             raise ValidationError({"message": "computer id must be valid UUID"})
 
-        serializer.save(computer=self.get_computer(computer_id))
-
-    def perform_create(self, serializer):
-        slot = serializer.save()
+        slot = serializer.save(computer=self.get_computer(computer_id))
         create_session.apply_async((slot.pk,), countdown=5)
 
     @action(methods=["GET"], detail=False)
