@@ -7,7 +7,7 @@ from vbb_backend.program.api.serializers.slotMentor import (
     MentorSlotBookingSerializer,
     MentorSlotSerializer,
 )
-from vbb_backend.program.models import Program, Slot, MentorSlotAssociation
+from vbb_backend.program.models import Slot, MentorSlotAssociation
 from vbb_backend.users.models import UserTypeEnum
 
 
@@ -20,7 +20,7 @@ class MentorSlotViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         user = self.request.user
-        slot = Slot.objects.get(external_id=self.kwargs.get("slot_base_external_id"))
+        slot = Slot.objects.get(external_id=self.kwargs.get("slot_external_id"))
         queryset = queryset.filter(slot=slot)
         if user.is_superuser:
             pass
@@ -32,7 +32,7 @@ class MentorSlotViewSet(ModelViewSet):
 
     def get_slot(self):
         return get_object_or_404(
-            self.get_queryset(), external_id=self.kwargs.get("slot_base_external_id")
+            self.get_queryset(), external_id=self.kwargs.get("slot_external_id")
         )
 
     def perform_create(self, serializer):
@@ -48,7 +48,7 @@ class MentorBookingViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         user = self.request.user
-        slot = Slot.objects.get(external_id=self.kwargs.get("slot_base_external_id"))
+        slot = Slot.objects.get(external_id=self.kwargs.get("slot_external_id"))
         queryset = queryset.filter(slot=slot)
         if user.is_superuser:
             pass
@@ -60,7 +60,7 @@ class MentorBookingViewSet(ModelViewSet):
 
     def get_slot(self):
         return get_object_or_404(
-            Slot.objects.all(), external_id=self.kwargs.get("slot_base_external_id")
+            Slot.objects.all(), external_id=self.kwargs.get("slot_external_id")
         )
 
     def perform_create(self, serializer):
