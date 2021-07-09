@@ -1,4 +1,5 @@
-from rest_framework.exceptions import PermissionDenied
+from uuid import UUID
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
@@ -8,6 +9,7 @@ from vbb_backend.program.api.serializers.slotMentor import (
     MentorSlotSerializer,
 )
 from vbb_backend.program.models import Slot, MentorSlotAssociation
+from vbb_backend.users.models import Mentor
 from vbb_backend.users.models import UserTypeEnum
 
 
@@ -30,13 +32,44 @@ class MentorSlotViewSet(ModelViewSet):
             raise PermissionDenied()
         return queryset
 
-    def get_slot(self):
+    def check_if_uuid(self, uuid_to_test):
+        try:
+            uuid_obj = UUID(uuid_to_test)
+        except ValueError:
+            return False
+        return str(uuid_obj) == uuid_to_test
+
+    def get_slot(self, slot_id):
         return get_object_or_404(
-            self.get_queryset(), external_id=self.kwargs.get("slot_external_id")
+            Slot.objects.all(), external_id=slot_id
+        )
+
+    def get_mentor(self, mentor_id):
+        return get_object_or_404(
+            Mentor.objects.all(), external_id=mentor_id
         )
 
     def perform_create(self, serializer):
-        serializer.save(slot=self.get_slot())
+        mentor_id = self.request.data.get("mentor")
+        if not mentor_id:
+            raise ValidationError({"message": "mentor id required"})
+        if not self.check_if_uuid(mentor_id):
+            raise ValidationError({"message": "mentor id must be valid UUID"})
+            
+        slot_id = self.kwargs.get("slot_external_id")
+        slot = self.get_slot(slot_id)
+        mentor = self.get_mentor(mentor_id)
+        obj = None
+
+        try:
+            obj = MentorSlotAssociation.objects.get(slot=slot, mentor=mentor)
+        except:
+            pass
+
+        if obj is not None:
+            raise ValidationError({"message": "mentor already assigned to slot"})
+        else:
+            serializer.save(slot=slot, mentor=mentor)
 
 
 class MentorBookingViewSet(ModelViewSet):
