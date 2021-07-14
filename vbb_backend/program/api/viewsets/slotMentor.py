@@ -39,14 +39,14 @@ class MentorSlotViewSet(ModelViewSet):
             return False
         return str(uuid_obj) == uuid_to_test
 
-    def get_slot(self, slot_id):
+    def get_slot(self):
         return get_object_or_404(
-            Slot.objects.all(), external_id=slot_id
+            Slot.objects.all(), external_id=self.kwargs.get("slot_external_id")
         )
 
-    def get_mentor(self, mentor_id):
+    def get_mentor(self):
         return get_object_or_404(
-            Mentor.objects.all(), external_id=mentor_id
+            Mentor.objects.all(), external_id=self.request.data.get("mentor")
         )
 
     def perform_create(self, serializer):
@@ -55,21 +55,8 @@ class MentorSlotViewSet(ModelViewSet):
             raise ValidationError({"message": "mentor id required"})
         if not self.check_if_uuid(mentor_id):
             raise ValidationError({"message": "mentor id must be valid UUID"})
-            
-        slot_id = self.kwargs.get("slot_external_id")
-        slot = self.get_slot(slot_id)
-        mentor = self.get_mentor(mentor_id)
-        obj = None
 
-        try:
-            obj = MentorSlotAssociation.objects.get(slot=slot, mentor=mentor)
-        except:
-            pass
-
-        if obj is not None:
-            raise ValidationError({"message": "mentor already assigned to slot"})
-        else:
-            serializer.save(slot=slot, mentor=mentor)
+        serializer.save(slot=self.get_slot(), mentor=self.get_mentor())
 
 
 class MentorBookingViewSet(ModelViewSet):
