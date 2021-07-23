@@ -467,7 +467,6 @@ class MentorSlotAssociation(BaseUUIDModel):
     )  # This is only editable by the program director or above
 
     class Meta:
-        # unique_together = (('mentor', 'slot', 'deleted'),)
         constraints = [
             models.UniqueConstraint(fields=["mentor", "slot"], condition=models.Q(deleted=False), name="unique_mentor_slot_pair"),
         ]
