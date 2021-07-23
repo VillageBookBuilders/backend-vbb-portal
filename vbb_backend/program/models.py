@@ -468,5 +468,9 @@ class MentorSlotAssociation(BaseUUIDModel):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["mentor", "slot"], condition=models.Q(deleted=False), name="unique_mentor_slot_pair"),
+            models.UniqueConstraint(
+                fields=["mentor", "slot"],
+                condition=models.Q(deleted=False),
+                name="unique_mentor_slot_pair"
+            ),
         ]
