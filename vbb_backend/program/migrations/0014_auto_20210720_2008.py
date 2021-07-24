@@ -15,20 +15,36 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="headmastersprogramassociation",
             name="headmaster",
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name="program_headmaster", to="users.Headmaster"),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="program_headmaster",
+                to="users.Headmaster",
+            ),
         ),
         migrations.AlterField(
             model_name="program",
             name="headmasters",
-            field=models.ManyToManyField(through="program.HeadmastersProgramAssociation", to="users.Headmaster"),
+            field=models.ManyToManyField(
+                through="program.HeadmastersProgramAssociation",
+                to="users.Headmaster"
+            ),
         ),
         migrations.AlterField(
             model_name="program",
             name="notes",
-            field=models.TextField(blank=True, help_text="comments, suggestions, notes, events, open-house dates,            mentor program break dates, internet connectivity, power avalibility,            state of infrastructure, etc", null=True),
+            field=models.TextField(
+                blank=True,
+                help_text="comments, suggestions, notes, events, open-house dates,            mentor program break dates, internet connectivity, power avalibility,            state of infrastructure, etc",
+                null=True,
+            ),
         ),
         migrations.AddConstraint(
             model_name="mentorslotassociation",
-            constraint=models.UniqueConstraint(condition=models.Q(deleted=False), fields=("mentor", "slot"), name="unique_mentor_slot_pair"),
+            constraint=models.UniqueConstraint(
+                condition=models.Q(deleted=False),
+                fields=("mentor", "slot"),
+                name="unique_mentor_slot_pair",
+            ),
         ),
     ]
