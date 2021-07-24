@@ -34,7 +34,10 @@ class Migration(migrations.Migration):
             name="notes",
             field=models.TextField(
                 blank=True,
-                help_text="comments, suggestions, notes, events, open-house dates,            mentor program break dates, internet connectivity, power avalibility,            state of infrastructure, etc",
+                help_text="comments, suggestions, notes, events, open-house \
+                    dates,            mentor program break dates, internet \
+                    connectivity, power avalibility,            state of \
+                    infrastructure, etc",
                 null=True,
             ),
         ),
