@@ -26,8 +26,7 @@ class Migration(migrations.Migration):
             model_name="program",
             name="headmasters",
             field=models.ManyToManyField(
-                through="program.HeadmastersProgramAssociation",
-                to="users.Headmaster"
+                through="program.HeadmastersProgramAssociation", to="users.Headmaster"
             ),
         ),
         migrations.AlterField(
