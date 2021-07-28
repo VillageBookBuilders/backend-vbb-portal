@@ -44,5 +44,5 @@ class StudentSlotSerializer(StudentSlotListSerializer):
                         "student": "Does not Exist. Are you sure the supplied value is a valid UUID"
                     }
                 )
-            attrs["program_director"] = student_obj
+            attrs["student"] = student_obj
         return super().validate(attrs)
