@@ -39,14 +39,10 @@ class MentorSlotViewSet(ModelViewSet):
         return str(uuid_obj) == uuid_to_test
 
     def get_slot(self):
-        return get_object_or_404(
-            Slot, external_id=self.kwargs.get("slot_external_id")
-        )
+        return get_object_or_404(Slot, external_id=self.kwargs.get("slot_external_id"))
 
     def get_mentor(self):
-        return get_object_or_404(
-            Mentor, external_id=self.request.data.get("mentor")
-        )
+        return get_object_or_404(Mentor, external_id=self.request.data.get("mentor"))
 
     def perform_create(self, serializer):
         mentor_id = self.request.data.get("mentor")
