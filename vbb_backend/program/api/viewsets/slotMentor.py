@@ -9,8 +9,7 @@ from vbb_backend.program.api.serializers.slotMentor import (
     MentorSlotSerializer,
 )
 from vbb_backend.program.models import Slot, MentorSlotAssociation
-from vbb_backend.users.models import Mentor
-from vbb_backend.users.models import UserTypeEnum
+from vbb_backend.users.models import UserTypeEnum, Mentor
 
 
 class MentorSlotViewSet(ModelViewSet):
@@ -41,12 +40,12 @@ class MentorSlotViewSet(ModelViewSet):
 
     def get_slot(self):
         return get_object_or_404(
-            Slot.objects.all(), external_id=self.kwargs.get("slot_external_id")
+            Slot, external_id=self.kwargs.get("slot_external_id")
         )
 
     def get_mentor(self):
         return get_object_or_404(
-            Mentor.objects.all(), external_id=self.request.data.get("mentor")
+            Mentor, external_id=self.request.data.get("mentor")
         )
 
     def perform_create(self, serializer):
