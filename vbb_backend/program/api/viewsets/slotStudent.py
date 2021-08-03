@@ -10,7 +10,7 @@ from vbb_backend.users.models import UserTypeEnum
 
 class StudentSlotViewSet(ModelViewSet):
     queryset = StudentSlotAssociation.objects.all()
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated]
     serializer_class = StudentSlotSerializer
     lookup_field = "external_id"
 
@@ -28,9 +28,7 @@ class StudentSlotViewSet(ModelViewSet):
         return queryset
 
     def get_slot(self):
-        return get_object_or_404(
-            Slot, external_id=self.kwargs.get("slot_external_id")
-        )
+        return get_object_or_404(Slot, external_id=self.kwargs.get("slot_external_id"))
 
     def perform_create(self, serializer):
         serializer.save(slot=self.get_slot())
