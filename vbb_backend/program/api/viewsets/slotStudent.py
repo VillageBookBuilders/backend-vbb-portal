@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from vbb_backend.program.api.serializers.slotStudent import StudentSlotSerializer
-from vbb_backend.program.models import Program, Slot, StudentSlotAssociation
+from vbb_backend.program.models import Slot, StudentSlotAssociation
 from vbb_backend.users.models import UserTypeEnum
 
 
