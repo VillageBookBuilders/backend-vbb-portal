@@ -11,14 +11,14 @@ from vbb_backend.users.models import UserTypeEnum
 
 class StudentViewSet(ModelViewSet):
     queryset = Student.objects.all()
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated]
     serializer_class = StudentSerializer
     lookup_field = "external_id"
 
     def get_queryset(self):
         queryset = self.queryset.filter(user__user_type=UserTypeEnum.STUDENT.value)
         user = self.request.user
-        school = School.objects.get(external_id=self.kwargs.get("school_external_id"))
+        school = self.get_school()
         queryset = queryset.filter(school=school)
         if user.is_superuser:
             pass
@@ -28,10 +28,11 @@ class StudentViewSet(ModelViewSet):
             raise PermissionDenied()
         return queryset
 
+    def get_school_post(self):
+        return get_object_or_404(School, external_id=self.request.data.get("school"))
+
     def get_school(self):
-        return get_object_or_404(
-            School, external_id=self.kwargs.get("school_external_id")
-        )
+        return get_object_or_404(School, external_id=self.request.GET.get("school"))
 
     def perform_create(self, serializer):
-        serializer.save(school=self.get_school())
+        serializer.save(school=self.get_school_post())
