@@ -16,6 +16,8 @@ from vbb_backend.program.api.serializers.program import MinimalProgramSerializer
 from vbb_backend.program.models import Computer, Slot
 from vbb_backend.users.models import UserTypeEnum
 
+from vbb_backend.session.tasks import create_session
+
 
 # class SlotViewSet(ModelViewSet):
 #     queryset = Slot.objects.all()
@@ -132,7 +134,8 @@ class SlotViewSet(ModelViewSet):
         if not self.check_if_uuid(computer_id):
             raise ValidationError({"message": "computer id must be valid UUID"})
 
-        serializer.save(computer=self.get_computer(computer_id))
+        slot = serializer.save(computer=self.get_computer(computer_id))
+        create_session.apply_async((slot.pk,), countdown=5)
 
     @action(methods=["GET"], detail=False)
     def get_unique_programs(self, request):

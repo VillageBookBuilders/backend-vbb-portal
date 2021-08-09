@@ -449,6 +449,15 @@ class StudentSlotAssociation(BaseUUIDModel):
     )
     priority = models.IntegerField(default=0)  # 0 is the highest priority
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["student", "slot"],
+                condition=models.Q(deleted=False),
+                name="unique_student_slot_pair",
+            ),
+        ]
+
 
 class MentorSlotAssociation(BaseUUIDModel):
     """
@@ -465,3 +474,12 @@ class MentorSlotAssociation(BaseUUIDModel):
     is_confirmed = models.BooleanField(
         default=False
     )  # This is only editable by the program director or above
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["mentor", "slot"],
+                condition=models.Q(deleted=False),
+                name="unique_mentor_slot_pair",
+            ),
+        ]

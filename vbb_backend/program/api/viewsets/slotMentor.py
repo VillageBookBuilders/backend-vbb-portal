@@ -1,4 +1,5 @@
-from rest_framework.exceptions import PermissionDenied
+from uuid import UUID
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
@@ -8,7 +9,7 @@ from vbb_backend.program.api.serializers.slotMentor import (
     MentorSlotSerializer,
 )
 from vbb_backend.program.models import Slot, MentorSlotAssociation
-from vbb_backend.users.models import UserTypeEnum
+from vbb_backend.users.models import UserTypeEnum, Mentor
 
 
 class MentorSlotViewSet(ModelViewSet):
@@ -30,13 +31,27 @@ class MentorSlotViewSet(ModelViewSet):
             raise PermissionDenied()
         return queryset
 
+    def check_if_uuid(self, uuid_to_test):
+        try:
+            uuid_obj = UUID(uuid_to_test)
+        except ValueError:
+            return False
+        return str(uuid_obj) == uuid_to_test
+
     def get_slot(self):
-        return get_object_or_404(
-            self.get_queryset(), external_id=self.kwargs.get("slot_external_id")
-        )
+        return get_object_or_404(Slot, external_id=self.kwargs.get("slot_external_id"))
+
+    def get_mentor(self):
+        return get_object_or_404(Mentor, external_id=self.request.data.get("mentor"))
 
     def perform_create(self, serializer):
-        serializer.save(slot=self.get_slot())
+        mentor_id = self.request.data.get("mentor")
+        if not mentor_id:
+            raise ValidationError({"message": "mentor id required"})
+        if not self.check_if_uuid(mentor_id):
+            raise ValidationError({"message": "mentor id must be valid UUID"})
+
+        serializer.save(slot=self.get_slot(), mentor=self.get_mentor())
 
 
 class MentorBookingViewSet(ModelViewSet):
